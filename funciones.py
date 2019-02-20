@@ -11,7 +11,7 @@ def createMatrix(n,arr):
     return matrix
 
 #uso de createMatrix
-#createMatrix(4, [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,0])
+createMatrix(4, [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,0])
 
 # Menu de inicio
 def selectProblem():

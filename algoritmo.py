@@ -1,3 +1,10 @@
+def blankpuzzle(n, val):
+    for x in range(n):
+        for y in range (n):
+            value = matrix[x,y]
+            if value == val:
+                return x,y
+
 def AStart(problem):
 
     frontier = [[problem.initial]]
@@ -5,7 +12,7 @@ def AStart(problem):
 
     while True:
         if len(frontier):
-            path = remove_choice(frontier)
+            path = remove_choice(frontier, problem.type)
             #s = path.end
             explored.appends(s)
 
@@ -21,5 +28,21 @@ def AStart(problem):
                         frontier.append(new_path)
             else:
                 return False    
-            
+
+def remove_choice(frontier, type):
+    if (problem.type == 1): #sudoku
+        pass
+    elif(problem.type == 2): #15puzzle
+        pass
+
+        
+    
+
+def PuzzleHeuristic():
+        
+        
+    pass
+
+def SudokuHeuristic():
+    pass
     

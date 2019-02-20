@@ -10,25 +10,39 @@ class frameWork():
         #para el puzzle
         actions = []
         #Mover hacia arriba
-        """try:
-            if (self.matrix[x+1][y].color==(255,255,255) or self.matrix[x+1][y].color==(255,0,0) or self.matrix[x+1][y].color==(0,255,0)):
-                actions.append("derecha")
+        try:
+            if ((s.x-1) >= 0 and (s.x-1) < 4):
+                actions.append("arriba")
         except IndexError:
             pass
         #Mover hacia abajo
+        try:
+            if ((s.x+1) >= 0 and (s.x+1) < 4):
+                actions.append("abajo")
+        except IndexError:
+            pass
         #Mover hacia la izquierda
+        try:
+            if ((s.y-1) > 0 and (s.y-1) < 4):
+                actions.append("izquierda")
+        except IndexError:
+            pass
         #Mover hacia la derecha
-        
-"""
-        pass
-    
+        try:
+            if ((s.y+1) >= 0 and (s.y+1) < 3):
+                actions.append("derecha")
+        except IndexError:
+            pass
+        print (actions)
+
     def result(self,s,a):
         pass
     
     def goalTest(self,s):
         if(s in self.goal):
             return True
-        return False
+        else:
+            return False
         
     def stepCost(self,s,a,s2):
         self.cost += 1
