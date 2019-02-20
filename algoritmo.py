@@ -1,33 +1,34 @@
-def blankpuzzle(n, val):
-    for x in range(n):
-        for y in range (n):
-            value = matrix[x,y]
-            if value == val:
-                return x,y
+
 
 def AStart(problem):
-
+    #nodos cercanos
     frontier = [[problem.initial]]
+    #estados prima guardados
     explored = []
 
     while True:
         if len(frontier):
+            #devuelve el nodo que debe moverse
             path = remove_choice(frontier, problem.type)
-            #s = path.end
+            #estado de la matriz dado el path
+            s = path.end 
             explored.appends(s)
 
             if(problem.goalTest(s)):
                 return path
-
+            
             for a in problem.actions(s):
                 result = problem.result(s,a)
-                if result[0] not in explored:
+                if result not in explored:
+                        # nodo que se va a mover
                         new_path = []
                         new_path.extend(path)
                         new_path.extend(problem.result(s,a))
                         frontier.append(new_path)
             else:
                 return False    
+
+
 
 def remove_choice(frontier, type):
     if (problem.type == 1): #sudoku
@@ -39,7 +40,9 @@ def remove_choice(frontier, type):
     
 
 def PuzzleHeuristic():
-        
+    """
+ 
+        """
         
     pass
 
