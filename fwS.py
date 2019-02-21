@@ -13,42 +13,10 @@ class framework():
           self.n = 4
 
      def actions(self, matrix):
-          empty = 0
-          n = 0
-          m = 0
-          position = []
-          possibility = []
-          poss_matrix = []
-
-          for x in range(self.n):
-               for y in range(self.n):
-                    if matrix[x][y] == ".":
-                         position.append(tuple([x,y]))
-                         empty += 1
-                         
-          while(n < empty):
-               num = ["1", "2", "3", "4"]
-               for i in range(self.n):
-                    if (matrix[position[n][0]][i] != "."):
-                         num.remove(matrix[position[n][0]][i])
-
-               for i in range(self.n):
-                    if ((matrix[i][position[n][1]] != ".") and (matrix[i][position[n][1]] in num)):
-                         num.remove(matrix[i][position[n][1]])
-               possibility.append(num)
-               n += 1
-
-          while(m < empty):
-               for i in possibility[m]:
-                    temp = copy.deepcopy(matrix)
-                    temp[position[m][0]][position[m][1]] = i
-                    poss_matrix.append(temp)
-               m += 1
-          return poss_matrix 
+          pass
 
      def goal_test(self, matrix):
           "Define goal test"
-          #[1, 2, 3, 4] appear exactly once in each row, column and box
           #row
           for x in range(self.n):
                goal = ["1", "2", "3", "4"]

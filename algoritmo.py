@@ -98,34 +98,7 @@ def AStart(problem):
 
 
 def remove_choice1(problem, frontier):
-    best_path = 0
-    total_cost = 0
-    for n in frontier: 
-        state = n[len(n) -1 ]
-        cost = 0
-
-        #colocar
-        for h in range(problem.n): 
-            cont = 0
-            for y in range(problem.n): 
-                if state[h][y] != ".": 
-                    cont += 1
-            cost += cont * cont
-
-        #Quitar
-        for h in range(problem.n): 
-            cont = 0
-            for y in range(problem.n): 
-                if state[y][h] != ".": 
-                    cont += 1
-            cost += cont * cont
-
-        #Total
-        if cost > total_cost: 
-            best_path = n
-            total_cost = cost
-
-    return best_path
+    pass
 
 def remove_choice2(frontier, problem,s, process):
 
