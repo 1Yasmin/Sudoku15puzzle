@@ -10,6 +10,7 @@ def createMatrix(n,arr):
             matrix[x,y] = arr[arrval]
             arrval = arrval +1
     return matrix
+
 #uso de createMatrix
 #createMatrix(4, [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,0])
 
@@ -43,13 +44,17 @@ def blanknode(matrix, n, val):
             if value == val:
                 return node(x,y)
 
+#Regresa TRUE si hay alguna igual
+#Regresa False si no hay igual
 def revExplored(explored, matrix):
-    res = True
-    for i in range(len(explored)):
-        if not (np.array_equal(matrix,i)):
+    res = False
+    for i in explored:
+       # print("RESULT DE LA MATRIZ")
+       # print(matrix)
+       # print("EXPLORADO")
+        #print(i)
+        if (np.array_equal(matrix,i)):
             res = True
-        else:
-            res = False
     return res
     
             

@@ -24,10 +24,11 @@ def AStart(problem):
             print(path.x , path.y)
             #estado de la matriz dado el path
             s = change(problem.matrix, blanknode(problem.matrix,4,0), process[-1])
-            explored.append(s)
+            tempS = s.copy()
+            explored.append(tempS)
             problem.matrix = s
             
-            #print (explored)
+            print (explored)
 
             if(problem.goalTest(s)):
                 return process
@@ -37,13 +38,17 @@ def AStart(problem):
             print("- Next State-")
             print(s)
 
-            print("explorados")
-            print(explored)
-            
+           # print("explorados")
+            #print(explored)
+
             for a in problem.actions(s):
                 temp = s.copy()
                 result = problem.result(temp,a)
-                if (revExplored(explored, result)):
+                #if result not in explored:
+                #d = revExplored(explored, result)
+                #print("RESPUESTA")
+                #print(d)
+                if (revExplored(explored, result) == False):
                     #print("Accion no explorada----------------------")
                     #print(a)
                     # nodo que se va a mover

@@ -18,7 +18,8 @@ def main():
 
 
 
-    """nod = node(2,1)
+    """
+    nod = node(2,1)
     nod2 = node(2,2)
     arr = []
     print("...................")
