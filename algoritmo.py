@@ -1,74 +1,140 @@
 from funciones import *
 from node import node
+import copy
 
 def AStart(problem):
-    #nodos cercanos
-    frontier = problem.initial
-    #estados prima guardados
-    explored = []
-    process = []
+
+    if(problem.protype == 1):
+        frontier = []
+        frontier = []
+        explored = []
+        path = [] #Result from A*
+        
+        state = problem.initial
+        path.append(state)
+        frontier.append(path)
+        
+    if(problem.protype == 2):
+        #nodos cercanos
+        frontier = problem.initial
+        #estados prima guardados
+        explored = []
+        process = []
+        
     
-    while True: 
-        print("-----FRONTIER----")
+    
+    while True:
+        
+        #print("-----FRONTIER----")
         #print(len(frontier))
-        for i in frontier:
-            print(i.x , i.y)
+        #for i in frontier:
+         #   print(i.x , i.y)
         
-        if len(frontier):           
-            #devuelve el nodo que debe moverse
-            path = remove_choice(frontier, problem,problem.matrix, process)
-            process.append(path)
-            print("PROCESS")
-            print(len(process))
-            print("Path--------------------------------------")
-            print(path.x , path.y)
-            #estado de la matriz dado el path
-            s = change(problem.matrix, blanknode(problem.matrix,4,0), process[-1])
-            tempS = s.copy()
-            explored.append(tempS)
-            problem.matrix = s
-            
-            print (explored)
+        if len(frontier):
 
-            if(problem.goalTest(s)):
-                return process
+            if(problem.protype == 1):
+                path = remove_choice1(problem, frontier)
+                state = path[len(path)-1]
+                explored.append(state)
+                frontier.remove(path)
+                #next state
+                drawMatrix(state)
+                
+                #Test
+                if problem.goal_test(state):
+                    return path
 
-            frontier = []
+                #Expansion
+                probability = problem.actions(state)
+                for i in probability:
+                    if i not in explored: 
+                        new_path = copy.deepcopy(path)
+                        new_path.append(i)
+                        frontier.append(new_path)
 
-            print("- Next State-")
-            print(s)
+            if(problem.protype == 2):
+                #devuelve el nodo que debe moverse
+                path = remove_choice2(frontier, problem,problem.matrix, process)
+                process.append(path)
+                print("PROCESS")
+                print(len(process))
+                print("Path--------------------------------------")
+                print(path.x , path.y)
+                #estado de la matriz dado el path
+                s = change(problem.matrix, blanknode(problem.matrix,4,0), process[-1])
+                tempS = s.copy()
+                explored.append(tempS)
+                problem.matrix = s
+                
+                print (explored)
 
-           # print("explorados")
-            #print(explored)
+                if(problem.goalTest(s)):
+                    return process
 
-            for a in problem.actions(s):
-                temp = s.copy()
-                result = problem.result(temp,a)
-                #if result not in explored:
-                #d = revExplored(explored, result)
-                #print("RESPUESTA")
-                #print(d)
-                if (revExplored(explored, result) == False):
-                    #print("Accion no explorada----------------------")
-                    #print(a)
-                    # nodo que se va a mover
-                    new_path = newFrontier(s,a)
-                    frontier.append(new_path)
+                frontier = []
+
+                print("- Next State-")
+                print(s)
+
+               # print("explorados")
+                #print(explored)
+
+                for a in problem.actions(s):
+                    temp = s.copy()
+                    result = problem.result(temp,a)
+                    #if result not in explored:
+                    #d = revExplored(explored, result)
+                    #print("RESPUESTA")
+                    #print(d)
+                    if (revExplored(explored, result) == False):
+                        #print("Accion no explorada----------------------")
+                        #print(a)
+                        # nodo que se va a mover
+                        new_path = newFrontier(s,a)
+                        frontier.append(new_path)
         else:
-            return False    
+            return print("El problema no tiene solucion")    
 
 
 
-def remove_choice(frontier, problem,s, process):
-    if (problem.protype == 1): #sudoku
-        pass
-    elif(problem.protype == 2): #15puzzle
-        posibles = []
-        for i in frontier:
-            posibles.append(PuzzleHeuristic(i, problem,s, process))
-        
-        return frontier[posibles.index(min(posibles))]
-        
+def remove_choice1(problem, frontier):
+    best_path = 0
+    total_cost = 0
+    for n in frontier: 
+        state = n[len(n) -1 ]
+        cost = 0
+
+        #colocar
+        for h in range(problem.n): 
+            cont = 0
+            for y in range(problem.n): 
+                if state[h][y] != ".": 
+                    cont += 1
+            cost += cont * cont
+
+        #Quitar
+        for h in range(problem.n): 
+            cont = 0
+            for y in range(problem.n): 
+                if state[y][h] != ".": 
+                    cont += 1
+            cost += cont * cont
+
+        #Total
+        if cost > total_cost: 
+            best_path = n
+            total_cost = cost
+
+    return best_path
+
+def remove_choice2(frontier, problem,s, process):
+
+    posibles = []
+    for i in frontier:
+        posibles.append(PuzzleHeuristic(i, problem,s, process))
+    
+    return frontier[posibles.index(min(posibles))]
+    
     
 
 def PuzzleHeuristic(nod, problem,s, process):
@@ -85,6 +151,5 @@ def PuzzleHeuristic(nod, problem,s, process):
     return val
     
 
-def SudokuHeuristic():
-    pass
-    
+
+

@@ -3,17 +3,24 @@ from funciones import *
 from node import node
 from algoritmo import AStart
 import fw
+import fwS
 import numpy as np
 
 def main():
-    entrada = selectProblem()
-    protype = entrada[0]
-    matrixInicial = createMatrix(4,entrada[1:])
-    problem = fw.frameWork(matrixInicial, getInitial(matrixInicial,4,0), getGoal(4), protype)
+    protype, entrada = selectProblem()
 
-  
-    print(matrixInicial)
-    AStart(problem)
+    if (protype == 1):
+        print (drawMatrix(entrada))
+        problem = fwS.framework(entrada, protype)
+        AStart(problem)
+        
+    elif(protype == 2):
+        matrixInicial = createMatrix(4,entrada)
+        problem = fw.frameWork(matrixInicial, getInitial(matrixInicial,4,0), getGoal(4), protype)
+        print(matrixInicial)
+        AStart(problem)
+        
+        
 
 
 
@@ -26,7 +33,7 @@ def main():
     a = change(matrixInicial,nod , nod2)
     arr.append(a) 
     print(arr)
-  #pruebas de la
+    #pruebas de la
     #print(problem.result(matrixInicial, "derecha"))
     #print(getGoal(4))
     #nod = node(0,3)

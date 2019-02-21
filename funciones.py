@@ -1,6 +1,29 @@
 import numpy as np
 from node import node
 
+"""---------------------- Sudoku---------------------------"""
+def sudoku_matrix(input):
+    "Convert entry to matrix"
+    row = []
+    sudoku = []
+    n = 0
+    for i in input: 
+        row.append(i)
+        n += 1 
+        if (n%4 == 0):
+            sudoku.append(row)
+            row = [] #clean row
+    return sudoku
+    
+def drawMatrix(matrix):
+        print("")
+        print("---------------------")
+        print('\n'.join([''.join(['{:4}'.format(item) 
+            for item in row]) for row in matrix]))
+        print("---------------------")
+
+
+"""----------------------- 15 Puzzle -----------------------"""
 # crea una matriz de leng n*n apartir de un array
 def createMatrix(n,arr):
     matrix = np.zeros((n,n))
@@ -113,13 +136,18 @@ def selectProblem():
         
         if (problema == "1"):
             cadena = input("Ingrese el juego: \n")
-            
+            if (len(cadena) != 16):
+                print('El tamaño del Sudoku debe ser de 4x4\n')
+            else: 
+                sudo = sudoku_matrix(cadena)
+                return 1, sudo
+                    
             select = False
         # 15 puzzle problem
         elif (problema == "2"):
             cadena = input("Ingrese el juego: \n")
             # el 2 indica el tipo de juego
-            arrPuzzle = [2]
+            arrPuzzle = []
             #guardar valores en una lista
             for i in cadena:
                 if i != ".":
@@ -130,7 +158,7 @@ def selectProblem():
                 else:
                     "Error en la entrada"
             #print (arrPuzzle)
-            return arrPuzzle
+            return 2, arrPuzzle
             select = False
         else:
             print("Porfavor coloque una opcion valida")
