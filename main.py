@@ -3,23 +3,40 @@ from funciones import *
 from node import node
 from algoritmo import AStart
 import fw
+import numpy as np
 
 def main():
     entrada = selectProblem()
-    type = entrada[0]
+    protype = entrada[0]
     matrixInicial = createMatrix(4,entrada[1:])
+    problem = fw.frameWork(matrixInicial, getInitial(matrixInicial,4,0), getGoal(4), protype)
 
+  
     print(matrixInicial)
-    problem = fw.frameWork(matrixInicial, getInitial(matrixInicial,4,0), [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,0], type)
+    AStart(problem)
 
-    print(problem.result(matrixInicial, "izquierda"))
-#pruebas de la 
+
+
+
+    """nod = node(2,1)
+    nod2 = node(2,2)
+    arr = []
+    print("...................")
+    a = change(matrixInicial,nod , nod2)
+    arr.append(a) 
+    print(arr)
+  #pruebas de la
+    #print(problem.result(matrixInicial, "derecha"))
+    #print(getGoal(4))
     #nod = node(0,3)
     #problem.actions(nod)
-    #print(problem.goalTest([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,0]))
+    print(problem.goalTest())
+    print(getGoal(4))
+    print(problem.goalTest(matrixInicial))
+
 
 #    nodos iniciales
-    """
+
     hi = getInitial(matrixInicial,4,0)
     print(hi[0].x)
     print(hi[0].y)
@@ -32,7 +49,7 @@ def main():
     print(len(hi)) """
 
     
-   # AStart(problem)
+   
 
 
 main()

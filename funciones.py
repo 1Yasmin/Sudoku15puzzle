@@ -11,7 +11,30 @@ def createMatrix(n,arr):
             arrval = arrval +1
     return matrix
 #uso de createMatrix
-createMatrix(4, [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,0])
+#createMatrix(4, [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,0])
+
+def newFrontier(s,a):   
+    vacio = blanknode(s,4,0)
+    if(a == "arriba"):
+        return node(vacio.x-1,vacio.y)                        
+    if(a == "abajo"):
+        return node(vacio.x+1,vacio.y)         
+    if(a == "izquierda"):
+        return node(vacio.x,vacio.y-1)       
+    if(a == "derecha"):
+        return node(vacio.x,vacio.y+1)            
+
+def getGoal(n):
+    matrix = np.zeros((n,n))
+    arrval = 1
+    for x in range(n):
+        for y in range (n):
+            if(y == n-1 and x == n-1):
+                matrix[x,y] = 0
+            else:
+                matrix[x,y] = arrval
+                arrval = arrval +1
+    return matrix
 
 def blanknode(matrix, n, val):
     for x in range(n):
@@ -19,6 +42,16 @@ def blanknode(matrix, n, val):
             value = matrix[x,y]
             if value == val:
                 return node(x,y)
+
+def revExplored(explored, matrix):
+    res = True
+    for i in range(len(explored)):
+        if not (np.array_equal(matrix,i)):
+            res = True
+        else:
+            res = False
+    return res
+    
             
 #busca los nodos alrededor de la posicion en blanco 
 def getInitial(matrix, n, val):

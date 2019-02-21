@@ -1,17 +1,19 @@
 from funciones import *
 from node import node
+import numpy as np
 
 class frameWork():
 
-    def __init__(self, matrix,initial,goal,type):
+    def __init__(self, matrix,initial,goal,protype):
         self.matrix = matrix
         self.initial = initial
-        self.type = type
+        self.protype = protype
         self.cost =  0
         self.goal = goal
         
     # s es un nodo
-    def actions(self,s):
+    def actions(self,state):
+        s = blanknode(state,4,0)
         #para el puzzle
         actions = []
         #Mover hacia arriba
@@ -44,24 +46,25 @@ class frameWork():
     # a es una accion
     def result(self,s,a):
         vacio = blanknode(s,4,0)
+        matriz = s.copy()
         if(a == "arriba"):
             nod = node(vacio.x-1,vacio.y)
-            s = change(s, vacio, nod)                        
+            matriz = change(s, vacio, nod)                        
         if(a == "abajo"):
             nod = node(vacio.x+1,vacio.y)
-            s = change(s, vacio, nod)            
+            matriz = change(s, vacio, nod)            
         if(a == "izquierda"):
             nod = node(vacio.x,vacio.y-1)
-            s = change(s, vacio, nod)            
+            matriz = change(s, vacio, nod)            
         if(a == "derecha"):
             nod = node(vacio.x,vacio.y+1)
-            s = change(s, vacio, nod)            
-        return s
+            matriz = change(s, vacio, nod)            
+        return matriz
 
     #Verifica que la matriz este ordenada
     #s es una matriz
     def goalTest(self,s):
-        if(s == self.goal):
+        if(np.array_equal(s,self.goal)):
             return True
         else:
             return False
