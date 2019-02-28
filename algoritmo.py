@@ -1,119 +1,126 @@
 from funciones import *
 from node import node
 import copy
+import math
 
 def AStart(problem):
-
-    if(problem.protype == 1):
-        frontier = []
-        frontier = []
-        explored = []
-        path = [] #Result from A*
+    #1.matrices
+    #2.nodos cercanos
+    frontier = problem.initial
+    #estados prima guardados
+    explored = []
         
-        state = problem.initial
-        path.append(state)
-        frontier.append(path)
-        
-    if(problem.protype == 2):
-        #nodos cercanos
-        frontier = problem.initial
-        #estados prima guardados
-        explored = []
-        process = []
-        
-    
-    
     while True:
-        
-        #print("-----FRONTIER----")
-        #print(len(frontier))
-        #for i in frontier:
-         #   print(i.x , i.y)
-        
+           
         if len(frontier):
 
             if(problem.protype == 1):
-                path = remove_choice1(problem, frontier)
-                state = path[len(path)-1]
+                path = remove_choice(frontier, problem, explored)
+                state= path
                 explored.append(state)
-                frontier.remove(path)
+                
                 #next state
                 drawMatrix(state)
                 
                 #Test
                 if problem.goal_test(state):
                     return path
+                
+                for a in problem.actions(state):
+                   # print(a)
+                    result = problem.result(state, a)
+                    
+                    if result not in explored:
+                        frontier.append(result)
+                    #frontier.append(result)
 
-                #Expansion
-                probability = problem.actions(state)
-                for i in probability:
-                    if i not in explored: 
-                        new_path = copy.deepcopy(path)
-                        new_path.append(i)
-                        frontier.append(new_path)
+                #print (frontier)
 
             if(problem.protype == 2):
+                
                 #devuelve el nodo que debe moverse
-                path = remove_choice2(frontier, problem,problem.matrix, process)
-                process.append(path)
-                print("PROCESS")
-                print(len(process))
-                print("Path--------------------------------------")
-                print(path.x , path.y)
+                path = remove_choice(frontier, problem, explored)
                 #estado de la matriz dado el path
-                s = change(problem.matrix, blanknode(problem.matrix,4,0), process[-1])
+                s = change(problem.matrix, blanknode(problem.matrix,4,0), path)
                 tempS = s.copy()
                 explored.append(tempS)
                 problem.matrix = s
                 
-                print (explored)
-
                 if(problem.goalTest(s)):
-                    return process
+                    return True
 
                 frontier = []
 
                 print("- Next State-")
                 print(s)
 
-               # print("explorados")
-                #print(explored)
-
                 for a in problem.actions(s):
                     temp = s.copy()
                     result = problem.result(temp,a)
-                    #if result not in explored:
-                    #d = revExplored(explored, result)
-                    #print("RESPUESTA")
-                    #print(d)
                     if (revExplored(explored, result) == False):
-                        #print("Accion no explorada----------------------")
-                        #print(a)
                         # nodo que se va a mover
                         new_path = newFrontier(s,a)
                         frontier.append(new_path)
         else:
-            return print("El problema no tiene solucion")    
+            return False   
 
 
+def remove_choice(frontier, problem, explored):
+    if(problem.protype == 1):
+        posibles = []
+        for i in frontier: 
+            posibles.append(sudokuHeuristic(i, problem, explored))
 
-def remove_choice1(problem, frontier):
-    pass
-
-def remove_choice2(frontier, problem,s, process):
-
-    posibles = []
-    for i in frontier:
-        posibles.append(PuzzleHeuristic(i, problem,s, process))
-    
-    return frontier[posibles.index(min(posibles))]
+        return frontier[posibles.index(min(posibles))]
     
     
+def sudokuHeuristic(matrix, problem, explored):
+    vacio = 0
+    #row
+    for x in range(problem.n):
+        for y in range(problem.n):
+            if (matrix[x][y] == "."):
+                vacio = vacio +1
+    #column
+    for x in range(problem.n):
+        goal = numArr(problem.n)
+        for y in range(problem.n):
+            if (matrix[y][x] == "."):
+                vacio == "."
+    #box
+    cantBox = problem.n
+    xi = 0
+    xf = int(math.sqrt(problem.n))
+    yi = 0
+    yf = int(math.sqrt(problem.n))
+    
+    while cantBox != 0:
+        #print(cantBox)
+        for a in range(xi,xf):
+            for b in range(yi,yf):
+                if (matrix[a][b] == "."):
+                    vacio = vacio + 1
 
-def PuzzleHeuristic(nod, problem,s, process):
+        if(xi < problem.n):
+            yf = yf + int(math.sqrt(problem.n))
+            yi = yi + int(math.sqrt(problem.n))
+            if(yi == problem.n):
+                yf =  int(math.sqrt(problem.n))
+                yi = 0
+                xf = xf + int(math.sqrt(problem.n))
+                xi = xi + int(math.sqrt(problem.n))
+
+        cantBox = cantBox -1
+        #print (xi, xf, yi, yf)
+
+
+    val = problem.pathCost(explored) + vacio
+    return val
+    
+    
+def PuzzleHeuristic(nod, problem, explored):
     misplace = 0
-    val = problem.pathCost(process) + misplace
-    res = change(s, blanknode(s,4,0),nod)
+    res = change(problem.matrix, blanknode(s,4,0),nod)
    
     for x in range(4):
         for y in range (4):
@@ -121,8 +128,7 @@ def PuzzleHeuristic(nod, problem,s, process):
             value2 = res[x,y]
             if value1 != value2:
                 misplace = misplace+1
+                
+    val = problem.pathCost(explored) + misplace
     return val
     
-
-
-

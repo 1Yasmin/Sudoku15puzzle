@@ -10,33 +10,34 @@ class frameWork():
         self.protype = protype
         self.cost =  0
         self.goal = goal
+        self.n = 4
         
     # s es un nodo
     def actions(self,state):
-        s = blanknode(state,4,0)
+        s = blanknode(state,self.n,0)
         #para el puzzle
         actions = []
         #Mover hacia arriba
         try:
-            if ((s.x-1) >= 0 and (s.x-1) < 4):
+            if ((s.x-1) >= 0 and (s.x-1) < self.n):
                 actions.append("arriba")
         except IndexError:
             pass
         #Mover hacia abajo
         try:
-            if ((s.x+1) >= 0 and (s.x+1) < 4):
+            if ((s.x+1) >= 0 and (s.x+1) < self.n):
                 actions.append("abajo")
         except IndexError:
             pass
         #Mover hacia la izquierda
         try:
-            if ((s.y-1) >= 0 and (s.y-1) < 4):
+            if ((s.y-1) >= 0 and (s.y-1) < self.n):
                 actions.append("izquierda")
         except IndexError:
             pass
         #Mover hacia la derecha
         try:
-            if ((s.y+1) >= 0 and (s.y+1) < 3):
+            if ((s.y+1) >= 0 and (s.y+1) < (self.n-1)):
                 actions.append("derecha")
         except IndexError:
             pass
@@ -45,7 +46,7 @@ class frameWork():
     # s es una matriz
     # a es una accion
     def result(self,s,a):
-        vacio = blanknode(s,4,0)
+        vacio = blanknode(s,self.n,0)
         matriz = s.copy()
         if(a == "arriba"):
             nod = node(vacio.x-1,vacio.y)

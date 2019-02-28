@@ -1,6 +1,7 @@
 from funciones import *
 from node import node
 import copy
+import math
 import numpy as np
 
 
@@ -12,46 +13,140 @@ class framework():
           self.cost =  0
           self.n = 4
 
+     # regresa un array de arrays con 3 numeros (x,y,SudokuNum)
      def actions(self, matrix):
-          pass
+          a = 0
+          position = []
+          option = []
 
+          # ver espacios libres
+          for x in range(self.n):
+               for y in range(self.n):
+                    #print("**************values and positions*********")
+                    #print(matrix[x][y])
+                    #print(x, y)
+                    if matrix[x][y] == ".":
+                         position.append(list([x,y]))
+
+          #print(position)
+          # posibles numeros en los espacios vacios
+          while(a < len(position)):
+               #print("The Value******")
+               #print(position[a])
+               num = numArr(self.n)
+               #print("num dentro del while")
+               #print(num)
+
+               #row
+               for i in range(self.n):
+                    #print("posicion evaluada 1----------")
+                    #print(matrix[position[a][0]][i])
+                    if (matrix[position[a][0]][i] != "."):
+                         num.remove(matrix[position[a][0]][i])
+
+               #column
+               for i in range(self.n):
+                    #print("posicion evaluada 2")
+                    #print(matrix[i][position[a][1]])
+                    if ((matrix[i][position[a][1]] != ".") and (matrix[i][position[a][1]] in num)):
+                         num.remove(matrix[i][position[a][1]])
+               
+               cajas = cajasEnMatrix(self.n)
+               boxToRev = foundCaja(cajas,position[a], self.n)
+
+               #print("BoxToRev")
+               #print(boxToRev)
+               
+               for w in range(boxToRev[0],boxToRev[1]):
+                    for b in range(boxToRev[2],boxToRev[3]):
+                         #print("Posicion evaluada box ")
+                         #print(matrix[w][b])
+                         if (matrix[w][b] in num):
+                              num.remove(matrix[w][b])
+
+               #print("num de opciones ")
+               #print(num)         
+               option.append(num)
+               a = a + 1                    
+          
+          res = []
+
+          #creacion del array
+          for c in range(len(position)):
+              for i in option[c]:
+                  action = copy.deepcopy(position[c])
+                  action.append(i)
+                  res.append(action)
+                  action = []
+          #print("ACCIONES")
+         # print(res)
+          return res
+
+     #remmplaza un numero en la posicion indicada          
+     #regresa una matriz
+     def result(self, s, a):
+         temp = copy.deepcopy(s)
+         temp[a[0]][a[1]] = a[2]
+
+         return temp
+
+     # verifica que los numeros no se repitan
      def goal_test(self, matrix):
-          "Define goal test"
           #row
           for x in range(self.n):
-               goal = ["1", "2", "3", "4"]
-               for y in range(4):
+               goal = numArr(self.n)
+               for y in range(self.n):
                     if (matrix[x][y] in goal):
                          goal.remove(matrix[x][y])
-          if (len(goal) > 0):
-               return False
-
+               if (len(goal) > 0):
+                    return False
+          
           #column
           for x in range(self.n):
-               goal = ["1", "2", "3", "4"]
-               for y in range(4):
+               goal = numArr(self.n)
+               for y in range(self.n):
                     if (matrix[y][x] in goal):
                          goal.remove(matrix[y][x])
                if (len(goal) > 0):
                     return False
+          
 
-          a, b, c, i= (0,)*4
-          while (i < self.n):
-               if(i==1):
-                    a = 2
-               elif (i==2):
-                    a = 0
-                    b = 2
-               elif (i==3):
-                    a = 2
-                    b = 2
-               for x in range(2):
-                    for y in range(2):
-                         if (matrix[x+b][y+a] in goal):
-                              goal.remove(matrix[x+b][y+a])
-               if(len(goal) != 0):
+          #box         
+          cantBox = self.n
+          xi = 0
+          xf = int(math.sqrt(self.n))
+          yi = 0
+          yf = int(math.sqrt(self.n))
+         
+          while cantBox != 0:
+               goal = numArr(self.n)
+               for a in range(xi,xf):
+                    for b in range(yi,yf):
+                         if (matrix[a][b] in goal):
+                              goal.remove(matrix[a][b])
+
+               if (len(goal) > 0):
                     return False
+               if(xi < self.n):
+                    yf = yf + int(math.sqrt(self.n))
+                    yi = yi + int(math.sqrt(self.n))
+                    if(yi == self.n):
+                         yf =  int(math.sqrt(self.n))
+                         yi = 0
+                         xf = xf + int(math.sqrt(self.n))
+                         xi = xi + int(math.sqrt(self.n))
+               cantBox = cantBox -1
+               
+          
           return True
+     
+     #costo por acción
+     def stepCost(self,s,a,s2):
+        self.cost += 1
+
+     #costo de todas las acciones
+     def pathCost(self,statesList):
+        return len(statesList)
 
     
     

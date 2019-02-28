@@ -1,18 +1,20 @@
 import numpy as np
 from node import node
+import math
+import copy
 
 """---------------------- Sudoku---------------------------"""
-def sudoku_matrix(input):
-    "Convert entry to matrix"
+#.4.13.4.1..4.21.
+def sudoku_matrix(input, n):
     row = []
     sudoku = []
-    n = 0
+    d = 0
     for i in input: 
         row.append(i)
-        n += 1 
-        if (n%4 == 0):
+        d += 1 
+        if (d%n == 0):
             sudoku.append(row)
-            row = [] #clean row
+            row = []
     return sudoku
     
 def drawMatrix(matrix):
@@ -22,6 +24,48 @@ def drawMatrix(matrix):
             for item in row]) for row in matrix]))
         print("---------------------")
 
+def numArr(n):
+    arr = []
+    num = 1
+    for x in range(n):
+        arr.append(str(num))
+        num = num +1
+        
+    return arr
+
+
+def cajasEnMatrix(n):
+    cantBox = n
+    xi = 0
+    xf = int(math.sqrt(n))
+    yi = 0
+    yf = int(math.sqrt(n))
+
+    cajas = [[xi,xf,yi,yf]]
+
+    while cantBox != 1:
+        if(xi < n):
+            yf = yf + int(math.sqrt(n))
+            yi = yi + int(math.sqrt(n))
+            if(yi == n):            
+                yf = int(math.sqrt(n))
+                yi = 0
+                xf = xf + int(math.sqrt(n))
+                xi = xi + int(math.sqrt(n))
+        
+        cantBox = cantBox -1
+        cajas.append([xi,xf,yi,yf])
+
+    return cajas
+
+def foundCaja(cajas, p, n):
+    point =  copy.deepcopy(p)
+    point[0] = point[0] + 1
+    point[1] = point[1] + 1
+    for i in cajas:
+        if cajas[cajas.index(i)][1] >= point[0] and cajas[cajas.index(i)][3] >= point[1]:
+            return i
+    
 
 """----------------------- 15 Puzzle -----------------------"""
 # crea una matriz de leng n*n apartir de un array
@@ -139,8 +183,8 @@ def selectProblem():
             if (len(cadena) != 16):
                 print('El tamaño del Sudoku debe ser de 4x4\n')
             else: 
-                sudo = sudoku_matrix(cadena)
-                return 1, sudo
+                sudo = sudoku_matrix(cadena, 4)
+                return 1, [sudo]
                     
             select = False
         # 15 puzzle problem
