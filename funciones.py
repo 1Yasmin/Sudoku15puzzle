@@ -4,7 +4,6 @@ import math
 import copy
 
 """---------------------- Sudoku---------------------------"""
-#.4.13.4.1..4.21.
 def sudoku_matrix(input, n):
     row = []
     sudoku = []
@@ -65,8 +64,21 @@ def foundCaja(cajas, p, n):
     for i in cajas:
         if cajas[cajas.index(i)][1] >= point[0] and cajas[cajas.index(i)][3] >= point[1]:
             return i
-    
 
+def noAccepted(s, n):
+    if (len(s) != 16):
+        print ("El tamaño no es el adecuado")
+        return False
+    
+    for i in s:
+        if (i != '.'):
+            if (int(i) < 1 or int(i) > n):
+                print("Algun numero no entra en el rango del sudoku")
+                return False
+
+    return True
+
+    
 """----------------------- 15 Puzzle -----------------------"""
 # crea una matriz de leng n*n apartir de un array
 def createMatrix(n,arr):
@@ -111,6 +123,18 @@ def blanknode(matrix, n, val):
             if value == val:
                 return node(x,y)
 
+def move(tempS, matrix):
+    nv = blanknode(tempS, 4, 0)
+    ant = blanknode(matrix, 4, 0)
+    if((ant.x -1) == nv.x):
+        return "arriba"
+    elif((ant.x +1) == nv.x):
+        return "abajo"
+    elif((ant.y -1) == nv.y):
+        return "izquierda"
+    elif((ant.y +1) == nv.y):
+        return "derecha"
+
 #Regresa TRUE si hay alguna igual
 #Regresa False si no hay igual
 def revExplored(explored, matrix):
@@ -135,6 +159,7 @@ def getInitial(matrix, n, val):
         if ((vacio.x-1) >= 0 and (vacio.x-1) < 4):
             arriba = node(vacio.x-1, vacio.y)
             actions.append(arriba)
+            print("arriba")
     except IndexError:
         pass
     #nodo de abajo
@@ -163,7 +188,8 @@ def getInitial(matrix, n, val):
     
 
 # movimiento del cuadro
-def change(matrix, nodVacio, nod2):
+def change(m, nodVacio, nod2):
+    matrix = m.copy()
     num = matrix[nod2.x, nod2.y]
     matrix[nodVacio.x,nodVacio.y] = num
     matrix[nod2.x, nod2.y] = 0
@@ -180,12 +206,10 @@ def selectProblem():
         
         if (problema == "1"):
             cadena = input("Ingrese el juego: \n")
-            if (len(cadena) != 16):
-                print('El tamaño del Sudoku debe ser de 4x4\n')
-            else: 
+            if (noAccepted(cadena, 4)):
                 sudo = sudoku_matrix(cadena, 4)
                 return 1, [sudo]
-                    
+            return False
             select = False
         # 15 puzzle problem
         elif (problema == "2"):

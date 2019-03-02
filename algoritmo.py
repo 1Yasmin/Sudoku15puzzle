@@ -2,6 +2,9 @@ from funciones import *
 from node import node
 import copy
 import math
+from math import trunc
+
+#noAction =
 
 def AStart(problem):
     #1.matrices
@@ -27,23 +30,21 @@ def AStart(problem):
                     return path
                 
                 for a in problem.actions(state):
-                   # print(a)
                     result = problem.result(state, a)
                     
                     if result not in explored:
                         frontier.append(result)
-                    #frontier.append(result)
-
-                #print (frontier)
-
+            
             if(problem.protype == 2):
-                
                 #devuelve el nodo que debe moverse
                 path = remove_choice(frontier, problem, explored)
+                
                 #estado de la matriz dado el path
                 s = change(problem.matrix, blanknode(problem.matrix,4,0), path)
                 tempS = s.copy()
                 explored.append(tempS)
+                            
+                #noAction = move(tempS, problem.matrix)
                 problem.matrix = s
                 
                 if(problem.goalTest(s)):
@@ -57,6 +58,7 @@ def AStart(problem):
                 for a in problem.actions(s):
                     temp = s.copy()
                     result = problem.result(temp,a)
+                    
                     if (revExplored(explored, result) == False):
                         # nodo que se va a mover
                         new_path = newFrontier(s,a)
@@ -72,6 +74,13 @@ def remove_choice(frontier, problem, explored):
             posibles.append(sudokuHeuristic(i, problem, explored))
 
         return frontier[posibles.index(min(posibles))]
+    if(problem.protype == 2):
+        posibles = []
+        for i in frontier:
+            posibles.append(PuzzleHeuristic(i, problem, explored))
+        #print(min(posibles))
+        return frontier[posibles.index(min(posibles))]
+    
     
     
 def sudokuHeuristic(matrix, problem, explored):
@@ -111,24 +120,36 @@ def sudokuHeuristic(matrix, problem, explored):
                 xi = xi + int(math.sqrt(problem.n))
 
         cantBox = cantBox -1
-        #print (xi, xf, yi, yf)
-
-
+    
     val = problem.pathCost(explored) + vacio
     return val
     
     
 def PuzzleHeuristic(nod, problem, explored):
+    distance = 0
+    res = change(problem.matrix, blanknode(problem.matrix,4,0),nod)
+    distance += abs(nod.x - trunc(((res[nod.x, nod.y]-1)/4))) + abs(nod.y -  ((res[nod.x, nod.y]-1)%4));
+    return distance
+
+    """
+    num = res[nod.x, nod.y]
+    nod2 = blanknode(problem.goal,4,num)
+    
+    val = abs(nod.x - nod2.x) + abs(nod.y - nod2.y)
+    return val
+    
     misplace = 0
-    res = change(problem.matrix, blanknode(s,4,0),nod)
+    res = change(problem.matrix, blanknode(problem.matrix,4,0),nod)
    
     for x in range(4):
         for y in range (4):
-            value1 = s[x,y]
+            value1 = problem.matrix[x,y]
             value2 = res[x,y]
             if value1 != value2:
                 misplace = misplace+1
                 
     val = problem.pathCost(explored) + misplace
     return val
+    """
+    
     

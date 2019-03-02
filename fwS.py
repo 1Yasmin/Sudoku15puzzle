@@ -22,21 +22,14 @@ class framework():
           # ver espacios libres
           for x in range(self.n):
                for y in range(self.n):
-                    #print("**************values and positions*********")
-                    #print(matrix[x][y])
-                    #print(x, y)
                     if matrix[x][y] == ".":
                          position.append(list([x,y]))
 
           #print(position)
           # posibles numeros en los espacios vacios
           while(a < len(position)):
-               #print("The Value******")
-               #print(position[a])
                num = numArr(self.n)
-               #print("num dentro del while")
-               #print(num)
-
+               
                #row
                for i in range(self.n):
                     #print("posicion evaluada 1----------")
@@ -54,18 +47,11 @@ class framework():
                cajas = cajasEnMatrix(self.n)
                boxToRev = foundCaja(cajas,position[a], self.n)
 
-               #print("BoxToRev")
-               #print(boxToRev)
-               
                for w in range(boxToRev[0],boxToRev[1]):
                     for b in range(boxToRev[2],boxToRev[3]):
-                         #print("Posicion evaluada box ")
-                         #print(matrix[w][b])
                          if (matrix[w][b] in num):
                               num.remove(matrix[w][b])
-
-               #print("num de opciones ")
-               #print(num)         
+       
                option.append(num)
                a = a + 1                    
           
@@ -78,8 +64,6 @@ class framework():
                   action.append(i)
                   res.append(action)
                   action = []
-          #print("ACCIONES")
-         # print(res)
           return res
 
      #remmplaza un numero en la posicion indicada          
