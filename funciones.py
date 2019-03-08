@@ -80,6 +80,54 @@ def noAccepted(s, n):
 
     
 """----------------------- 15 Puzzle -----------------------"""
+
+def less(i, arr):
+    count = 0
+    for a in arr:
+        if(arr.index(a) > arr.index(i)):
+            if(a < i and i == 16):
+                count = count +1
+            elif (a < i):
+                return 1
+    return count
+
+def noApuzzle(cadena):
+    if (len(cadena) != 16):
+        print ("El tamaño no es el adecuado")
+        return False
+    
+    for i in cadena:
+        if (i != '.'):
+            if (int(i, 16) < 1 or int(i, 16) > 16):
+                print("Algun numero no entra en el rango del puzzle")
+                return False
+        else:
+            if(cadena.index(i)%2 == 0):
+                x = 0
+            else:
+                x = 1
+    
+    arrPuzzle = []
+    #guardar valores en una lista
+    for i in cadena:
+        if i != ".":
+            num = int(i, 16)
+            arrPuzzle.append(num)
+        elif i == ".":
+            arrPuzzle.append(16)
+
+    total = 0
+    for i in arrPuzzle:
+        temp = less(i, arrPuzzle)
+        total = total +temp
+            
+    result = total + x
+    if(result == 16):
+        return True
+    else:
+        print("El puzzle no tiene solución")
+        return False
+
 # crea una matriz de leng n*n apartir de un array
 def createMatrix(n,arr):
     matrix = np.zeros((n,n))
@@ -115,6 +163,7 @@ def getGoal(n):
                 matrix[x,y] = arrval
                 arrval = arrval +1
     return matrix
+    #return [[1,2,3,4][5,6,7,8],[9,10,11,12],[13,14,15,0]]
 
 def blanknode(matrix, n, val):
     for x in range(n):
@@ -198,36 +247,34 @@ def change(m, nodVacio, nod2):
 
 # Menu de inicio
 def selectProblem():
-    problema = input("Que juego desea solucionar. \n1.Sudoku \n2.15puzzle \n")
     select = True
-
     while select:
         # Sudoku problem
-        
+        problema = input("Que juego desea solucionar. \n1.Sudoku \n2.15puzzle \n")
         if (problema == "1"):
+            select = False
             cadena = input("Ingrese el juego: \n")
             if (noAccepted(cadena, 4)):
                 sudo = sudoku_matrix(cadena, 4)
                 return 1, [sudo]
-            return False
-            select = False
+            else:
+                return 0, False 
         # 15 puzzle problem
         elif (problema == "2"):
-            cadena = input("Ingrese el juego: \n")
-            # el 2 indica el tipo de juego
-            arrPuzzle = []
-            #guardar valores en una lista
-            for i in cadena:
-                if i != ".":
-                    num = int(i, 16)
-                    arrPuzzle.append(num)
-                elif i == ".":
-                    arrPuzzle.append(0)
-                else:
-                    "Error en la entrada"
-            #print (arrPuzzle)
-            return 2, arrPuzzle
             select = False
+            cadena = input("Ingrese el juego: \n")
+            if(noApuzzle(cadena)):
+                arrPuzzle = []
+                #guardar valores en una lista
+                for i in cadena:
+                    if i != ".":
+                        num = int(i, 16)
+                        arrPuzzle.append(num)
+                    elif i == ".":
+                        arrPuzzle.append(0)
+                return 2, arrPuzzle    
+            else:
+                return 0, False
         else:
             print("Porfavor coloque una opcion valida")
             problema = input("Que juego desea solucionar. \n1.Sudoku \n2.15puzzle \n")

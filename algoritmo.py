@@ -2,13 +2,12 @@ from funciones import *
 from node import node
 import copy
 import math
+import random
 from math import trunc
 
-#noAction =
 
 def AStart(problem):
-    #1.matrices
-    #2.nodos cercanos
+    #matrices
     frontier = problem.initial
     #estados prima guardados
     explored = []
@@ -21,7 +20,7 @@ def AStart(problem):
                 path = remove_choice(frontier, problem, explored)
                 state= path
                 explored.append(state)
-                
+                            
                 #next state
                 drawMatrix(state)
                 
@@ -30,21 +29,18 @@ def AStart(problem):
                     return path
                 
                 for a in problem.actions(state):
-                    result = problem.result(state, a)
-                    
+                    result = problem.result(state, a)                    
                     if result not in explored:
                         frontier.append(result)
-            
+
             if(problem.protype == 2):
+                
                 #devuelve el nodo que debe moverse
                 path = remove_choice(frontier, problem, explored)
-                
                 #estado de la matriz dado el path
                 s = change(problem.matrix, blanknode(problem.matrix,4,0), path)
                 tempS = s.copy()
                 explored.append(tempS)
-                            
-                #noAction = move(tempS, problem.matrix)
                 problem.matrix = s
                 
                 if(problem.goalTest(s)):
@@ -58,27 +54,25 @@ def AStart(problem):
                 for a in problem.actions(s):
                     temp = s.copy()
                     result = problem.result(temp,a)
-                    
                     if (revExplored(explored, result) == False):
                         # nodo que se va a mover
                         new_path = newFrontier(s,a)
                         frontier.append(new_path)
-        else:
-            return False   
-
+            
 
 def remove_choice(frontier, problem, explored):
     if(problem.protype == 1):
         posibles = []
         for i in frontier: 
             posibles.append(sudokuHeuristic(i, problem, explored))
-
+        
         return frontier[posibles.index(min(posibles))]
     if(problem.protype == 2):
         posibles = []
+        random.shuffle(frontier)
         for i in frontier:
             posibles.append(PuzzleHeuristic(i, problem, explored))
-        #print(min(posibles))
+        #print(posibles)
         return frontier[posibles.index(min(posibles))]
     
     
@@ -128,7 +122,12 @@ def sudokuHeuristic(matrix, problem, explored):
 def PuzzleHeuristic(nod, problem, explored):
     distance = 0
     res = change(problem.matrix, blanknode(problem.matrix,4,0),nod)
-    distance += abs(nod.x - trunc(((res[nod.x, nod.y]-1)/4))) + abs(nod.y -  ((res[nod.x, nod.y]-1)%4));
+    for i in range(4):
+        for j in range(4):
+            #mide la distancia entre nodos o lugar utopico
+            if problem.matrix[i][j] == 0: continue
+            distance += abs(nod.x - trunc(((res[nod.x, nod.y]-1)/4))) + abs(nod.y -  ((res[nod.x, nod.y]-1)%4))
+          #  print (distance)
     return distance
 
     """
@@ -151,5 +150,4 @@ def PuzzleHeuristic(nod, problem, explored):
     val = problem.pathCost(explored) + misplace
     return val
     """
-    
     
